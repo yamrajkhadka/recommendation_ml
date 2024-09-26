@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+        }
+        .recommendations {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book Recommendation System</h1>
+        <input type="text" id="book_name" placeholder="Enter Book Name" />
+        <button onclick="getRecommendations()">Get Recommendations</button>
+        <div id="recommendations" class="recommendations"></div>
+    </div>
+
+    <script>
+        function getRecommendations() {
+            const bookName = document.getElementById('book_name').value;
+            fetch('/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `book_name=${bookName}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                let recommendationsDiv = document.getElementById('recommendations');
+                recommendationsDiv.innerHTML = `<h2>Recommendations for "${bookName}":</h2><ul>`;
+                data.forEach(book => {
+                    recommendationsDiv.innerHTML += `<li>${book}</li>`;
+                });
+                recommendationsDiv.innerHTML += `</ul>`;
+            });
+        }
+    </script>
+</body>
+</html>
